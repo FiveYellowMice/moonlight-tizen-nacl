@@ -90,7 +90,7 @@ String.prototype.toHex = function() {
   return hex;
 }
 
-function NvHTTP (address, clientUid, userEnteredAddress = '') {
+function NvHTTP (address, clientUid, userEnteredAddress) {
   console.log('%c[utils.js, NvHTTP Object]', 'color: gray;', this);
   this.address = address;
   this.ppkstr = null;

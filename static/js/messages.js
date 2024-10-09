@@ -87,10 +87,10 @@ function handleMessage(msg) {
       // Show the video stream now
       $("#nacl_module")[0].style.opacity = 1.0;
     } else if (msg.data.indexOf('controllerRumble: ' ) === 0) {
-      const eventData = msg.data.split( ' ' )[1].split(',');
-      const gamepadIdx = parseInt(eventData[0]);
-      const weakMagnitude = parseFloat(eventData[1]);
-      const strongMagnitude = parseFloat(eventData[2]);
+      var eventData = msg.data.split( ' ' )[1].split(',');
+      var gamepadIdx = parseInt(eventData[0]);
+      var weakMagnitude = parseFloat(eventData[1]);
+      var strongMagnitude = parseFloat(eventData[2]);
       console.log("Playing rumble on gamepad " + gamepadIdx + " with weakMagnitude " + weakMagnitude + " and strongMagnitude " + strongMagnitude);
 
       // We may not actually have a gamepad at this index.

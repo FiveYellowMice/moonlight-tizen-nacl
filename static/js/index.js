@@ -21,7 +21,7 @@ function attachListeners() {
   $('#quitCurrentApp').on('click', stopGameWithConfirmation);
   $(window).resize(fullscreenNaclModule);
 
-  const registerMenu = (elementId, view) => {
+  var registerMenu = (elementId, view) => {
     $(`#${elementId}`).on('click', () => {
       if (view.isActive())
         Navigation.pop();
@@ -36,13 +36,13 @@ function attachListeners() {
 
   Controller.startWatching();
   window.addEventListener('gamepadbuttonpressed', (e) => {
-    const pressed = e.detail.pressed;
-    const key = e.detail.key;
+    var pressed = e.detail.pressed;
+    var key = e.detail.key;
 
     if (!pressed)
       return;
 
-    const gamepadMapping = {
+    var gamepadMapping = {
       0: () => Navigation.accept(),
       1: () => Navigation.back(),
       8: () => Navigation.selectBtn(),
@@ -479,8 +479,8 @@ function stylizeBoxArt(freshApi, appIdToStylize) {
 
 function sortTitles(list, sortOrder) {
   return list.sort((a, b) => {
-    const titleA = a.title.toLowerCase();
-    const titleB = b.title.toLowerCase();
+    var titleA = a.title.toLowerCase();
+    var titleB = b.title.toLowerCase();
 
     // A - Z
     if (sortOrder === 'ASC') {
@@ -536,7 +536,7 @@ function showApps(host) {
       return; // We stop the function right here
     }
     // if game grid is populated, empty it
-    const sortedAppList = sortTitles(appList, 'ASC');
+    var sortedAppList = sortTitles(appList, 'ASC');
 
     sortedAppList.forEach(function (app) {
       if ($('#game-' + app.id).length === 0) {
@@ -852,11 +852,11 @@ function stopGame(host, callbackFunction) {
   });
 }
 
-let indexedDB = null;
-const dbVersion = 1.0;
-let db = null;
-const dbName = 'GameStreamingDB';
-const storeName = 'GameStreamingStore';
+var indexedDB = null;
+var dbVersion = 1.0;
+var db = null;
+var dbName = 'GameStreamingDB';
+var storeName = 'GameStreamingStore';
 
 // Based on example from
 // https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/
@@ -880,7 +880,7 @@ function openIndexDB(callback) {
   }
 
   // Create/open database
-  const request = indexedDB.open(dbName, dbVersion);
+  var request = indexedDB.open(dbName, dbVersion);
 
   request.onerror = function(event) {
     console.error('Error creating/accessing IndexedDB database', event);
@@ -903,22 +903,22 @@ function openIndexDB(callback) {
 }
 
 function callCb(key, value, callbackFunction) {
-  let obj = {};
+  var obj = {};
   obj[key] = value;
   callbackFunction(obj);
 }
 
 function getData(key, callbackFunction) {
-  let cb = function() {
+  var cb = function() {
     try {
-      const transaction = db.transaction(storeName, 'readonly');
-      const readRequest = transaction.objectStore(storeName).get(key);
+      var transaction = db.transaction(storeName, 'readonly');
+      var readRequest = transaction.objectStore(storeName).get(key);
 
       // Retrieve the data that was stored
       readRequest.onsuccess = function(event) {
         console.log('Read data from the DB key: ' +
                     key + ' value: '+ readRequest.result);
-        let value = null;
+        var value = null;
         if (readRequest.result) {
           value = JSON.parse(readRequest.result);
         }
@@ -947,10 +947,10 @@ function getData(key, callbackFunction) {
 }
 
 function storeData(key, data, callbackFunction) {
-  let cb = function () {
+  var cb = function () {
     try {
-      const transaction = db.transaction(storeName, 'readwrite'); //open a transaction to the database
-      const put = transaction.objectStore(storeName).put(
+      var transaction = db.transaction(storeName, 'readwrite'); //open a transaction to the database
+      var put = transaction.objectStore(storeName).put(
         JSON.stringify(data), key);
 
       transaction.oncomplete = function (e) {
@@ -1164,7 +1164,7 @@ window.onload = onWindowLoad;
 
 // Required on TizenTV, to get gamepad events.
 window.addEventListener('gamepadconnected', function (event) {
-  const connectedGamepad = event.gamepad;
+  var connectedGamepad = event.gamepad;
   console.log('%c[index.js, gamepadconnected] gamepad connected: ', 'color: green;', connectedGamepad);
 
   if (connectedGamepad.vibrationActuator) { // Check if the gamepad supports rumble

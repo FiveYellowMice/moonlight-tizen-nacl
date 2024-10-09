@@ -1,42 +1,38 @@
-const Controller = (function() {
-  let pollingInterval = null;
+var Controller = (function() {
+  var pollingInterval = null;
 
-  const gamepads = {};
+  var gamepads = {};
 
-  class Button {
-    constructor(button) {
-      this.value = button.value;
-      this.pressed = button.pressed;
-    }
+  function Button(button) {
+    this.value = button.value;
+    this.pressed = button.pressed;
   }
 
-  class Gamepad {
-    constructor(gamepad) {
-      this.buttons = gamepad.buttons.map((button) => new Button(button));
-    }
-
-    analyzeButtons(newButtons) {
-      if (this.buttons.length !== newButtons.length) {
-        console.error('New buttons layout does not match saved one');
-        return;
-      }
-
-      for (let i = 0; i < newButtons.length; ++i) {
-        if (this.buttons[i].pressed !== newButtons[i].pressed) {
-          window.dispatchEvent(
-              new CustomEvent('gamepadbuttonpressed',
-                  {
-                    detail: {
-                      key: i,
-                      pressed: newButtons[i].pressed,
-                    },
-                  }));
-        }
-      }
-
-      this.buttons = newButtons.map((button) => new Button(button));
-    }
+  function Gamepad(gamepad) {
+    this.buttons = gamepad.buttons.map((button) => new Button(button));
   }
+
+  Gamepad.prototype.analyzeButtons = function(newButtons) {
+    if (this.buttons.length !== newButtons.length) {
+      console.error('New buttons layout does not match saved one');
+      return;
+    }
+
+    for (var i = 0; i < newButtons.length; ++i) {
+      if (this.buttons[i].pressed !== newButtons[i].pressed) {
+        window.dispatchEvent(
+            new CustomEvent('gamepadbuttonpressed',
+                {
+                  detail: {
+                    key: i,
+                    pressed: newButtons[i].pressed,
+                  },
+                }));
+      }
+    }
+
+    this.buttons = newButtons.map((button) => new Button(button));
+  };
 
   function gamepadConnected(gamepad) {
     gamepads[gamepad.index] = new Gamepad(gamepad);
@@ -47,8 +43,8 @@ const Controller = (function() {
   }
 
   function analyzeGamepad(gamepad) {
-    const index = gamepad.index;
-    const pGamepad = gamepads[index];
+    var index = gamepad.index;
+    var pGamepad = gamepads[index];
 
     if (pGamepad) {
       pGamepad.analyzeButtons(gamepad.buttons);
@@ -56,11 +52,16 @@ const Controller = (function() {
   }
 
   function pollGamepads() {
-    const gamepads =
+    var gamepads =
         navigator.getGamepads ?
           navigator.getGamepads() :
           (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-    for (const gamepad of gamepads) {
+
+    if (!gamepads) {
+      return;
+    }
+
+    for (var gamepad of gamepads) {
       if (gamepad) {
         analyzeGamepad(gamepad);
       }
@@ -90,7 +91,7 @@ const Controller = (function() {
 })();
 
 function remoteControllerHandler(e) {
-  const keyCode = e.keyCode;
+  var keyCode = e.keyCode;
 
   // Prevent the default behavior for specific keys
   switch (keyCode) {

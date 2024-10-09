@@ -1,8 +1,8 @@
-const hoveredClassName = 'hovered';
-let gameCard;
+var hoveredClassName = 'hovered';
+var gameCard;
 
 function mark(value) {
-  let element = typeof value === 'string' ? document.getElementById(value) : value;
+  var element = typeof value === 'string' ? document.getElementById(value) : value;
   if (element) {
     element.classList.add(hoveredClassName);
     element.dispatchEvent(new Event('mouseenter'));
@@ -13,7 +13,7 @@ function mark(value) {
 }
 
 function unmark(value) {
-  let element = typeof value === 'string' ? document.getElementById(value) : value;
+  var element = typeof value === 'string' ? document.getElementById(value) : value;
   if (element) {
     element.classList.remove(hoveredClassName);
     element.dispatchEvent(new Event('mouseleave'));
@@ -32,37 +32,35 @@ function isPopupActive(id) {
     .contains('is-visible');
 }
 
-class ListView {
-  constructor(func) {
-    this.index = 0;
-    this.func = func;
-  }
+function ListView(func) {
+  this.index = 0;
+  this.func = func;
+}
 
-  prev() {
-    const array = this.func();
-    unmark(array[this.index]);
-    this.index = (this.index - 1 + array.length) % array.length;
-    mark(array[this.index]);
-    return array[this.index];
-  }
+ListView.prototype.prev = function() {
+  var array = this.func();
+  unmark(array[this.index]);
+  this.index = (this.index - 1 + array.length) % array.length;
+  mark(array[this.index]);
+  return array[this.index];
+}
 
-  next() {
-    const array = this.func();
-    unmark(array[this.index]);
-    this.index = (this.index + 1) % array.length;
-    mark(array[this.index]);
-    return array[this.index];
-  }
+ListView.prototype.next = function() {
+  var array = this.func();
+  unmark(array[this.index]);
+  this.index = (this.index + 1) % array.length;
+  mark(array[this.index]);
+  return array[this.index];
+}
 
-  current() {
-    return this.func()[this.index];
-  }
+ListView.prototype.current = function() {
+  return this.func()[this.index];
 }
 
 function navigateGameCards(offset) { //helper function for Apps view
-  let gameCards = Array.from(document.getElementById('game-grid').children);
-  let currentIndex = gameCards.indexOf(gameCard);
-  let newIndex = currentIndex + offset;
+  var gameCards = Array.from(document.getElementById('game-grid').children);
+  var currentIndex = gameCards.indexOf(gameCard);
+  var newIndex = currentIndex + offset;
 
   if (newIndex >= 0 && newIndex < gameCards.length) {
     gameCard = gameCards[newIndex];
@@ -70,7 +68,7 @@ function navigateGameCards(offset) { //helper function for Apps view
   }
 }
 
-const Views = {
+var Views = {
   Hosts: {
     view: new ListView(() => document.getElementById('host-grid').children),
     up: function () { Navigation.change(Views.HostsNav) },
@@ -78,7 +76,7 @@ const Views = {
     left: function () { this.view.prev() },
     right: function () { this.view.next() },
     accept: function () {
-      const element = this.view.current();
+      var element = this.view.current();
       if (element.id === 'addHostCell') {
         element.click();
       } else {
@@ -86,7 +84,7 @@ const Views = {
       }
     },
     startBtn: function () {
-      const element = this.view.current();
+      var element = this.view.current();
       if (element.id != 'addHostCell') {
         element.children[1].click();
       }
@@ -212,9 +210,9 @@ const Views = {
   Apps: {
     view: new ListView(function () { return document.getElementById('game-grid').children }),
     up: function () {
-      let gameCards = Array.from(document.getElementById('game-grid').children);
-      let currentIndex = gameCards.indexOf(gameCard);
-      let cardsPerRow = Math.min(6, gameCards.length);
+      var gameCards = Array.from(document.getElementById('game-grid').children);
+      var currentIndex = gameCards.indexOf(gameCard);
+      var cardsPerRow = Math.min(6, gameCards.length);
 
       if (currentIndex >= cardsPerRow) {
         navigateGameCards(-cardsPerRow);
@@ -223,9 +221,9 @@ const Views = {
       }
     },
     down: function () {
-      let gameCards = Array.from(document.getElementById('game-grid').children);
-      let currentIndex = gameCards.indexOf(gameCard);
-      let cardsPerRow = Math.min(6, gameCards.length);
+      var gameCards = Array.from(document.getElementById('game-grid').children);
+      var currentIndex = gameCards.indexOf(gameCard);
+      var cardsPerRow = Math.min(6, gameCards.length);
 
       if (currentIndex + cardsPerRow < gameCards.length) {
         navigateGameCards(cardsPerRow);
@@ -253,11 +251,11 @@ const Views = {
   },
 };
 
-const Navigation = (function () {
-  let hasFocus = false;
+var Navigation = (function () {
+  var hasFocus = false;
 
-  const Stack = (function () {
-    const viewStack = [];
+  var Stack = (function () {
+    var viewStack = [];
 
     function push(view) {
       if (get()) {
@@ -292,8 +290,8 @@ const Navigation = (function () {
     return {get, push, change, pop};
   })();
 
-  const State = (function() {
-    let running = false;
+  var State = (function() {
+    var running = false;
 
     function start() {
       if (!running) {
@@ -345,7 +343,7 @@ const Navigation = (function () {
         return;
       }
 
-      const view = Stack.get();
+      var view = Stack.get();
       if (view && typeof view[name] === 'function') {
         view[name]();
       }
