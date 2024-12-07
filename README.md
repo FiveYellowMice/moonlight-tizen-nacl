@@ -42,7 +42,7 @@ This can then be used to package the app for samsung accordingly (see the docker
      tizen install -n MoonlightNaCl.wgt -t YOUR_DEVICE_ID
      exit
      ```
-   - Replace `YOUR_TV_IP` and `YOUR_DEVICE_ID` with your TV's IP and Device ID respectively.
+   - Replace `YOUR_TV_IP` and `YOUR_DEVICE_ID` with your TV's IP and Device ID respectively, the Device ID is the last column shown in `sdb devices`, something like `UE65NU7400`.
 
 4. **(Optional) Disable Developer Mode**:
    - Revisit the `Apps` panel to turn off Developer mode and restart the TV.
